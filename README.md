@@ -1,8 +1,8 @@
-# oxa-machine
+# forge-hub
 
 ## License
 
-This project, `oxa-machine`, is licensed under the **MIT License**.
+This project, `forge-hub`, is licensed under the **MIT License**.
 
 A copy of the full license text can be found in the `LICENSE` file in this repository.
 
@@ -51,4 +51,4 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-**Important:** `oxa-machine` is an independent project and is not affiliated with, endorsed by, or sponsored by Bungie, Inc. or the Destiny franchise. All Destiny content, images, and trademarks are the property of Bungie, Inc. This application uses the official Bungie.net API, and adherence to Bungie's API Terms of Use is required. The inclusion of advertising in this application is solely for its support and maintenance and does not imply any endorsement or partnership with Bungie.
+**Important:** `forge-hub` is an independent project and is not affiliated with, endorsed by, or sponsored by Bungie, Inc. or the Destiny franchise. All Destiny content, images, and trademarks are the property of Bungie, Inc. This application uses the official Bungie.net API, and adherence to Bungie's API Terms of Use is required. The inclusion of advertising in this application is solely for its support and maintenance and does not imply any endorsement or partnership with Bungie.
