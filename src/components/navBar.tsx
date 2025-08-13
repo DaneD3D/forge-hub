@@ -14,7 +14,7 @@ function NavBar() {
                     ) : (
                         <span class="text-red-400 font-semibold px-3 py-2">Not Authenticated</span>
                     )}
-                    <a href="/logout" class="text-gray-300 hover:text-white px-3 py-2">Logout</a>
+                    <a href="/" onClick={() => auth.logout()} class="text-gray-300 hover:text-white px-3 py-2">Logout</a>
                 </div>
             </div>
         </nav>

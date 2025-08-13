@@ -1,8 +1,10 @@
 import { onMount } from "solid-js";
 import { BungieTokenResponse, useAuth, User } from "./AuthContext";
+import { useNavigate } from "@solidjs/router";
 
 function OAuthCallback() {
   const auth = useAuth();
+  const navigate = useNavigate();
 
   onMount(async () => {
     const params = new URLSearchParams(window.location.search);
@@ -26,7 +28,7 @@ function OAuthCallback() {
           id: tokenResponse.membership_id,
         };
         auth.login(userProfile, tokenResponse);
-        // window.location.href = "/profile";
+        navigate("/profile");
         
       } catch (error) {
         console.error("Token exchange failed:", error);
