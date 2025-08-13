@@ -6,6 +6,10 @@ export default defineConfig({
   plugins: [solidPlugin(), tailwindcss()],
   server: {
     port: 3000,
+    https: {
+      key: './certs/key.pem',
+      cert: './certs/cert.pem',
+    },
   },
   build: {
     target: 'esnext',
