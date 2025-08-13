@@ -26,6 +26,7 @@ function OAuthCallback() {
         // Store the user and tokens in our global state
         const userProfile: User = {
           id: tokenResponse.membership_id,
+          bungieMembershipId: tokenResponse.membership_id,
         };
         auth.login(userProfile, tokenResponse);
         navigate("/profile");

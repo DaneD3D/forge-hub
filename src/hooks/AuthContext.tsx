@@ -5,6 +5,7 @@ import { createStore } from 'solid-js/store';
 
 export interface User {
   id: string;
+  bungieMembershipId: string;
 }
 
 export interface BungieTokenResponse {
@@ -40,9 +41,14 @@ export const AuthProvider = (props: { children: any }) => {
     });
 
     const login = (user: User, tokens: BungieTokenResponse) => {
-        setUser(user);
+        // Ensure bungieMembershipId is set from membership_id
+        const userWithMembership: User = {
+            ...user,
+            bungieMembershipId: tokens.membership_id
+        };
+        setUser(userWithMembership);
         setTokens(tokens);
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify(userWithMembership));
         localStorage.setItem("tokens", JSON.stringify(tokens));
     };
 
