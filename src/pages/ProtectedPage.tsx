@@ -20,7 +20,7 @@ function ProtectedPage() {
           <p class="text-xl text-gray-300 mb-6">
             Your Bungie Membership ID is: 
             <span class="font-mono bg-gray-800 text-orange-400 px-2 py-1 rounded-md ml-2">
-              {auth.user()?.bungieMembershipId}
+              {auth.user()?.id}
             </span>
           </p>
           <button

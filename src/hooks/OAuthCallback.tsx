@@ -14,34 +14,19 @@ function OAuthCallback() {
     // Validate the state to prevent CSRF attacks
     if (state !== storedState) {
       console.error("State mismatch. Possible CSRF attack.");
-      // Handle error, e.g., redirect to login
       return;
     }
     
     if (code) {
-      //
-      // IMPORTANT: The token exchange MUST be done on a secure server.
-      // We are mocking this for demonstration purposes.
-      //
-      console.log('Authorization code received:', code);
-      console.log('Simulating token exchange with a backend server...');
-
       try {
         const tokenResponse: BungieTokenResponse = await mockTokenExchange(code);
-        
-        // After getting the tokens, you can fetch user profile data if needed
-        // For simplicity, we'll just use the membership_id from the token response
-        const userProfile: User = {
-          id: tokenResponse.membership_id,
-          username: "Guardian-" + tokenResponse.membership_id.substring(0, 4), // Mocked username
-          bungieMembershipId: tokenResponse.membership_id
-        };
 
         // Store the user and tokens in our global state
+        const userProfile: User = {
+          id: tokenResponse.membership_id,
+        };
         auth.login(userProfile, tokenResponse);
-        
-        // Redirect the user to a protected page
-        window.location.href = "/profile";
+        // window.location.href = "/profile";
         
       } catch (error) {
         console.error("Token exchange failed:", error);
@@ -60,16 +45,37 @@ function OAuthCallback() {
 }
 
 export default OAuthCallback;
-async function mockTokenExchange(code: string): Promise<BungieTokenResponse> {
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  // Return a mocked token response
+async function mockTokenExchange(code: string): Promise<BungieTokenResponse> {
+  // WARNING: This is insecure and for development only!
+  const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+  const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+
+  const params = new URLSearchParams();
+  params.append("grant_type", "authorization_code");
+  params.append("code", code);
+  params.append("client_id", CLIENT_ID);
+  params.append("redirect_uri", REDIRECT_URI);
+
+  const response = await fetch("https://www.bungie.net/Platform/App/OAuth/token/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: params.toString(),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to exchange token: " + response.statusText);
+  }
+  const data = await response.json();
+
+  console.log("Token response data:", data);
+
   return {
-    access_token: "mock_access_token_" + code,
-    refresh_token: "mock_refresh_token_" + code,
-    expires_in: 3600,
-    membership_id: "123456789",
-    refresh_expires_in: 86400,
+    access_token: data.access_token,
+    expires_in: data.expires_in,
+    membership_id: data.membership_id,
+    token_type: data.token_type
   };
 }
