@@ -1,6 +1,7 @@
 /* @refresh reload */
 import './index.css';
 import { render } from 'solid-js/web';
+import {AuthProvider} from './hooks/AuthContext';
 
 import App from './App';
 
@@ -12,4 +13,8 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
-render(() => <App />, root!);
+  render(() => (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  ), root);
