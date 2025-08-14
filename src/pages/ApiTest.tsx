@@ -7,9 +7,8 @@ function ApiTest() {
   const auth = useAuth();
   const user = auth.user();
   const tokens = auth.tokens();
-  const membershipId = user?.bungieMembershipId || "";
-  const membershipType = "1"; // You may want to get this from user data if available
-  const apiKey = import.meta.env.VITE_BUNGIE_API_KEY;
+  const membershipId = user?.bungieMembershipId;
+  const membershipType = user?.bungieMembershipType;
 
   const [userData, { refetch }] = createResource(() =>
     fetchBungieNetUserById(membershipId)
@@ -19,7 +18,7 @@ function ApiTest() {
     fetchProfile(
       auth.httpClient(),
       membershipId,
-      Number(membershipType)
+      membershipType
     )
   );
 
@@ -49,9 +48,7 @@ function ApiTest() {
       <div class="mt-8">
         <h2 class="text-xl font-semibold mb-2">User Information</h2>
         <p><strong>Membership ID:</strong> {membershipId}</p>
-        <p><strong>Membership Type:</strong> {membershipType}</p>
         <p><strong>Access Token:</strong> {tokens?.access_token || "N/A"}</p>
-        <p><strong>API Key:</strong> {apiKey}</p>
         <p><strong>User Data:</strong> {JSON.stringify(userData(), null, 2) || "N/A"}</p>
       </div>
 

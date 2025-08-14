@@ -4,12 +4,14 @@ import { httpClient } from '../utils/httpClient';
 export interface User {
   id: string;
   bungieMembershipId: string;
+  bungieMembershipType: number;
 }
 
 export interface BungieTokenResponse {
   access_token: string;
   expires_in: number;
   membership_id: string;
+  membership_type: number;
   token_type: string;
 }
 

@@ -29,6 +29,7 @@ async function exchangeAuthorizationCode(code: string, state: string): Promise<B
     access_token: data.access_token,
     expires_in: data.expires_in,
     membership_id: data.membership_id,
+    membership_type: data.membership_type,
     token_type: data.token_type
   };
 }
@@ -60,6 +61,7 @@ function OAuthCallback() {
         const userProfile: User = {
           id: tokenResponse.membership_id,
           bungieMembershipId: tokenResponse.membership_id,
+          bungieMembershipType: tokenResponse.membership_type
         };
         auth.login(userProfile, tokenResponse);
         navigate("/profile");
