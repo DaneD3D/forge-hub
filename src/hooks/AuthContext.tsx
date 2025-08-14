@@ -3,18 +3,18 @@ import { httpClient } from '../utils/httpClient';
 import { DestinyLinkedProfilesResponse } from 'bungie-api-ts/destiny2';
 
 export interface User {
-  bungieMembershipId: string;
-  destinyMembershipId: string;
-  destinyMembershipType: number;
-  bungieGlobalDisplayName?: string;
-  bungieGlobalDisplayNameCode?: number;
-  applicableMembershipTypes?: number[];
+  bungie_membership_id: string;
+  destiny_membership_id: string;
+  destiny_membership_type: number;
+  bungie_global_display_name?: string;
+  bungie_global_display_name_code?: number;
+  applicable_membership_types?: number[];
 }
 
 export interface BungieTokenResponse {
   token: string;
   expires_in: number;
-  membership_id: string;
+  bungie_membership_id: string;
   membership_type: number;
   token_type: string;
   refresh_expires_in?: number;
@@ -79,7 +79,7 @@ export const AuthProvider = (props: { children: any }) => {
         return {
             token: data.access_token,
             expires_in: data.expires_in,
-            membership_id: data.membership_id,
+            bungie_membership_id: data.membership_id,
             membership_type: data.membership_type,
             token_type: data.token_type,
             refresh_expires_in: data.refresh_expires_in,
@@ -102,17 +102,17 @@ export const AuthProvider = (props: { children: any }) => {
         const profile = data.linkedProfiles?.profiles?.[0];
         if (!profile) throw new Error("No profile found in token response");
         const userProfile: User = {
-            bungieMembershipId: data.membership_id,
-            destinyMembershipId: profile.membershipId,
-            destinyMembershipType: profile.membershipType,
-            bungieGlobalDisplayName: profile.bungieGlobalDisplayName,
-            bungieGlobalDisplayNameCode: profile.bungieGlobalDisplayNameCode,
-            applicableMembershipTypes: profile.applicableMembershipTypes,
+            bungie_membership_id: data.membership_id,
+            destiny_membership_id: profile.membershipId,
+            destiny_membership_type: profile.membershipType,
+            bungie_global_display_name: profile.bungieGlobalDisplayName,
+            bungie_global_display_name_code: profile.bungieGlobalDisplayNameCode,
+            applicable_membership_types: profile.applicableMembershipTypes,
         };
         const tokenResponse: BungieTokenResponse = {
             token: data.access_token,
             expires_in: data.expires_in,
-            membership_id: data.membership_id,
+            bungie_membership_id: data.membership_id,
             membership_type: data.membership_type,
             token_type: data.token_type,
             refresh_expires_in: data.refresh_expires_in,
