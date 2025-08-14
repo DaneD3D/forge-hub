@@ -1,10 +1,14 @@
 import { createContext, createSignal, useContext, onMount, Accessor } from 'solid-js';
 import { httpClient } from '../utils/httpClient';
+import { DestinyLinkedProfilesResponse } from 'bungie-api-ts/destiny2';
 
 export interface User {
-  id: string;
   bungieMembershipId: string;
-  bungieMembershipType: number;
+  destinyMembershipId: string;
+  destinyMembershipType: number;
+  bungieGlobalDisplayName?: string;
+  bungieGlobalDisplayNameCode?: number;
+  applicableMembershipTypes?: number[];
 }
 
 export interface BungieTokenResponse {
@@ -13,14 +17,17 @@ export interface BungieTokenResponse {
   membership_id: string;
   membership_type: number;
   token_type: string;
+  linkedProfiles?: DestinyLinkedProfilesResponse;
 }
 
-interface AuthContextType {
+export interface AuthContextType {
   user: Accessor<User | null>;
   tokens: Accessor<BungieTokenResponse | null>;
   isAuthenticated: Accessor<boolean>;
   login: (userData: User, tokens: BungieTokenResponse) => void;
   logout: () => void;
+  exchangeAuthorizationCode: (code: string, state: string) => Promise<BungieTokenResponse>;
+  exchangeAuthorizationCodeAndLogin: (code: string, state: string) => Promise<void>;
   httpClient: () => typeof httpClient;
 }
 
@@ -42,13 +49,9 @@ export const AuthProvider = (props: { children: any }) => {
     });
 
     const login = (user: User, tokens: BungieTokenResponse) => {
-        const userWithMembership: User = {
-            ...user,
-            bungieMembershipId: tokens.membership_id
-        };
-        setUser(userWithMembership);
+        setUser(user);
         setTokens(tokens);
-        localStorage.setItem("user", JSON.stringify(userWithMembership));
+        localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("tokens", JSON.stringify(tokens));
     };
 
@@ -59,12 +62,54 @@ export const AuthProvider = (props: { children: any }) => {
         localStorage.removeItem("tokens");
     };
 
+
+    // Moved from OAuthCallback.tsx
+    const exchangeAuthorizationCode = async (code: string, state: string): Promise<BungieTokenResponse> => {
+        const payload = { code, state };
+        const response = await fetch("https://68tctxxzd8.execute-api.us-east-1.amazonaws.com/default/BungieOAuthHandoff", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+        if (!response.ok) {
+            const errorBody = await response.json().catch(() => ({}));
+            throw new Error(`Failed to exchange token: ${response.statusText}. Detail: ${JSON.stringify(errorBody)}`);
+        }
+        const data = await response.json();
+        return {
+            access_token: data.access_token,
+            expires_in: data.expires_in,
+            membership_id: data.membership_id,
+            membership_type: data.membership_type,
+            token_type: data.token_type,
+            linkedProfiles: data.linkedProfiles,
+        };
+    };
+
+    // New: handles both exchange and login
+    const exchangeAuthorizationCodeAndLogin = async (code: string, state: string) => {
+        const tokenResponse = await exchangeAuthorizationCode(code, state);
+        const profile = tokenResponse.linkedProfiles?.profiles?.[0];
+        if (!profile) throw new Error("No profile found in token response");
+        const userProfile: User = {
+            bungieMembershipId: tokenResponse.membership_id,
+            destinyMembershipId: profile.membershipId,
+            destinyMembershipType: profile.membershipType,
+            bungieGlobalDisplayName: profile.bungieGlobalDisplayName,
+            bungieGlobalDisplayNameCode: profile.bungieGlobalDisplayNameCode,
+            applicableMembershipTypes: profile.applicableMembershipTypes,
+        };
+        login(userProfile, tokenResponse);
+    };
+
     const value: AuthContextType = {
         user,
         tokens,
         isAuthenticated,
         login,
         logout,
+        exchangeAuthorizationCode,
+        exchangeAuthorizationCodeAndLogin,
         httpClient: () => httpClient
     };
 

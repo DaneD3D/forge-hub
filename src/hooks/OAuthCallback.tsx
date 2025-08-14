@@ -1,38 +1,6 @@
 import { onMount } from "solid-js";
-import { BungieTokenResponse, useAuth, User } from "./AuthContext";
+import { useAuth } from "./AuthContext";
 import { useNavigate } from "@solidjs/router";
-
-async function exchangeAuthorizationCode(code: string, state: string): Promise<BungieTokenResponse> {
-  const payload = {
-    code,
-    state,
-  };
-
-  const response = await fetch("https://68tctxxzd8.execute-api.us-east-1.amazonaws.com/default/BungieOAuthHandoff", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    // Better error message to help with debugging
-    const errorBody = await response.json().catch(() => ({}));
-    throw new Error(`Failed to exchange token: ${response.statusText}. Detail: ${JSON.stringify(errorBody)}`);
-  }
-  const data = await response.json();
-
-  console.log("Token response data:", data);
-
-  return {
-    access_token: data.access_token,
-    expires_in: data.expires_in,
-    membership_id: data.membership_id,
-    membership_type: data.membership_type,
-    token_type: data.token_type
-  };
-}
 
 function OAuthCallback() {
   const auth = useAuth();
@@ -54,18 +22,8 @@ function OAuthCallback() {
     // Now check that both code and state exist before proceeding
     if (code && state) {
       try {
-        // Pass both code and state to the exchange function
-        const tokenResponse: BungieTokenResponse = await exchangeAuthorizationCode(code, state);
-
-        // Store the user and tokens in our global state
-        const userProfile: User = {
-          id: tokenResponse.membership_id,
-          bungieMembershipId: tokenResponse.membership_id,
-          bungieMembershipType: tokenResponse.membership_type
-        };
-        auth.login(userProfile, tokenResponse);
+        await auth.exchangeAuthorizationCodeAndLogin(code, state);
         navigate("/profile");
-        
       } catch (error) {
         console.error("Token exchange failed:", error);
       }
