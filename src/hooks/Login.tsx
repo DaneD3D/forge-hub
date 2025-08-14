@@ -6,7 +6,6 @@ function Login() {
     const handleLogin = () => {
         const state = Math.random().toString(36).substring(2, 15);
         localStorage.setItem('bungie_oauth_state', state);
-
         const url = `${AUTH_URL}?client_id=${CLIENT_ID}&response_type=code&state=${state}&redirect_uri=${REDIRECT_URI}`;
         window.location.href = url;
     };

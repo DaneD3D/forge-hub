@@ -2,18 +2,10 @@ import { onMount } from "solid-js";
 import { BungieTokenResponse, useAuth, User } from "./AuthContext";
 import { useNavigate } from "@solidjs/router";
 
-// This function exchanges the authorization code for an access token
-// It is no longer a "mock" function, but a real API call to your backend
 async function exchangeAuthorizationCode(code: string, state: string): Promise<BungieTokenResponse> {
-  const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-  const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
-
-  // The Lambda function expects a JSON payload with both the code and state
   const payload = {
     code,
     state,
-    client_id: CLIENT_ID,
-    redirect_uri: REDIRECT_URI,
   };
 
   const response = await fetch("https://68tctxxzd8.execute-api.us-east-1.amazonaws.com/default/BungieOAuthHandoff", {

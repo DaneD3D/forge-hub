@@ -1,7 +1,5 @@
-import { render } from 'solid-js/web';
-import { Router, Route } from '@solidjs/router';
-import { createContext, createSignal, useContext, onMount, Accessor, Show, JSXElement } from 'solid-js';
-import { createStore } from 'solid-js/store';
+import { createContext, createSignal, useContext, onMount, Accessor } from 'solid-js';
+import { httpClient } from '../utils/httpClient';
 
 export interface User {
   id: string;
@@ -21,6 +19,7 @@ interface AuthContextType {
   isAuthenticated: Accessor<boolean>;
   login: (userData: User, tokens: BungieTokenResponse) => void;
   logout: () => void;
+  httpClient: () => typeof httpClient;
 }
 
 const AuthContext = createContext<AuthContextType>();
@@ -41,7 +40,6 @@ export const AuthProvider = (props: { children: any }) => {
     });
 
     const login = (user: User, tokens: BungieTokenResponse) => {
-        // Ensure bungieMembershipId is set from membership_id
         const userWithMembership: User = {
             ...user,
             bungieMembershipId: tokens.membership_id
@@ -64,7 +62,8 @@ export const AuthProvider = (props: { children: any }) => {
         tokens,
         isAuthenticated,
         login,
-        logout
+        logout,
+        httpClient: () => httpClient
     };
 
     return (
