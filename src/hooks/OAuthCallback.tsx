@@ -2,6 +2,45 @@ import { onMount } from "solid-js";
 import { BungieTokenResponse, useAuth, User } from "./AuthContext";
 import { useNavigate } from "@solidjs/router";
 
+// This function exchanges the authorization code for an access token
+// It is no longer a "mock" function, but a real API call to your backend
+async function exchangeAuthorizationCode(code: string, state: string): Promise<BungieTokenResponse> {
+  const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+  const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+
+  // The Lambda function expects a JSON payload with both the code and state
+  const payload = {
+    code,
+    state,
+    client_id: CLIENT_ID,
+    redirect_uri: REDIRECT_URI,
+  };
+
+  const response = await fetch("https://68tctxxzd8.execute-api.us-east-1.amazonaws.com/default/BungieOAuthHandoff", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    // Better error message to help with debugging
+    const errorBody = await response.json().catch(() => ({}));
+    throw new Error(`Failed to exchange token: ${response.statusText}. Detail: ${JSON.stringify(errorBody)}`);
+  }
+  const data = await response.json();
+
+  console.log("Token response data:", data);
+
+  return {
+    access_token: data.access_token,
+    expires_in: data.expires_in,
+    membership_id: data.membership_id,
+    token_type: data.token_type
+  };
+}
+
 function OAuthCallback() {
   const auth = useAuth();
   const navigate = useNavigate();
@@ -13,15 +52,17 @@ function OAuthCallback() {
 
     const storedState = localStorage.getItem('bungie_oauth_state');
     
-    // Validate the state to prevent CSRF attacks
+    // Always validate the state to prevent CSRF attacks
     if (state !== storedState) {
       console.error("State mismatch. Possible CSRF attack.");
       return;
     }
     
-    if (code) {
+    // Now check that both code and state exist before proceeding
+    if (code && state) {
       try {
-        const tokenResponse: BungieTokenResponse = await mockTokenExchange(code);
+        // Pass both code and state to the exchange function
+        const tokenResponse: BungieTokenResponse = await exchangeAuthorizationCode(code, state);
 
         // Store the user and tokens in our global state
         const userProfile: User = {
@@ -48,37 +89,3 @@ function OAuthCallback() {
 }
 
 export default OAuthCallback;
-
-async function mockTokenExchange(code: string): Promise<BungieTokenResponse> {
-  // WARNING: This is insecure and for development only!
-  const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-  const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
-
-  const params = new URLSearchParams();
-  params.append("grant_type", "authorization_code");
-  params.append("code", code);
-  params.append("client_id", CLIENT_ID);
-  params.append("redirect_uri", REDIRECT_URI);
-
-  const response = await fetch("https://www.bungie.net/Platform/App/OAuth/token/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: params.toString(),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to exchange token: " + response.statusText);
-  }
-  const data = await response.json();
-
-  console.log("Token response data:", data);
-
-  return {
-    access_token: data.access_token,
-    expires_in: data.expires_in,
-    membership_id: data.membership_id,
-    token_type: data.token_type
-  };
-}
