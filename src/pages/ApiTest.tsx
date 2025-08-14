@@ -1,13 +1,22 @@
 import { createResource, Show } from "solid-js";
 import { useAuth } from "../hooks/AuthContext";
-import { fetchProfile } from "../api/destiny2/getProfile";
+import { getProfile, GetProfileParams } from "bungie-api-ts/destiny2";
 
 function ApiTest() {
   const auth = useAuth();
   const user = auth.user();
-  const tokens = auth.tokens();
-  const membershipId = user?.bungieMembershipId;
-  const membershipType = user?.bungieMembershipType;
+  const membershipId = user?.destiny_membership_id;
+  const membershipType = user?.destiny_membership_type;
+
+  const GetProfileParams: GetProfileParams = {
+    destinyMembershipId: membershipId,
+    membershipType: membershipType,
+    components: [100, 200, 201, 202, 205, 300, 301, 302, 304, 305, 306]
+  };
+
+  const getProfileResource = createResource(() =>
+    membershipId && membershipType ? getProfile(auth.httpClient(), GetProfileParams) : null
+  );
 
   return (
     <div class="text-white p-8">
@@ -23,12 +32,28 @@ function ApiTest() {
         <h2 class="text-xl font-semibold mb-2">Authentication Status</h2>
         <p><strong>Authenticated:</strong> {auth.isAuthenticated() ? "Yes" : "No"}</p>
         <Show when={auth.isAuthenticated()}>
-          <p><strong>User ID:</strong> {user?.id || "N/A"}</p>
-          <p><strong>Bungie Membership ID:</strong> {user?.bungieMembershipId || "N/A"}</p>
+          <p><strong>Bungie Membership ID:</strong> {user?.bungie_membership_id || "N/A"}</p>
         </Show>
         <Show when={!auth.isAuthenticated()}>
           <p class="text-red-500">You are not authenticated. Please log in.</p>
         </Show>
+
+        <button
+          onClick={async () => {
+            if (membershipId && membershipType) {
+              try {
+                const result = await getProfile(auth.httpClient(), GetProfileParams);
+                console.log("getProfile result:", result);
+              } catch (err) {
+                console.error("getProfile error:", err);
+              }
+            } else {
+              console.warn("Missing membershipId or membershipType");
+            }
+          }}
+        >
+          Test Destiny2 getProfile API Call
+        </button>
       </div>
     </div>
   );

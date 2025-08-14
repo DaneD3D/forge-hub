@@ -10,7 +10,7 @@ function NavBar() {
                     <a href="/" class="text-gray-300 hover:text-white px-3 py-2">Home</a>
                     <a href="/profile" class="text-gray-300 hover:text-white px-3 py-2">Profile</a>
                     {auth.isAuthenticated() ? (
-                        <span class="text-green-400 font-semibold px-3 py-2">Authenticated as {auth.user()?.id}</span>
+                        <span class="text-green-400 font-semibold px-3 py-2">Authenticated as {auth.user()?.bungie_global_display_name}</span>
                     ) : (
                         <span class="text-red-400 font-semibold px-3 py-2">Not Authenticated</span>
                     )}

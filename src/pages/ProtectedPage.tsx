@@ -18,9 +18,9 @@ function ProtectedPage() {
         <div class="container mx-auto">
           <h1 class="text-4xl font-extrabold text-orange-400 mb-4">Welcome, Guardian!</h1>
           <p class="text-xl text-gray-300 mb-6">
-            Your Bungie Membership ID is: 
+            Your Bungie Global Display Name is: 
             <span class="font-mono bg-gray-800 text-orange-400 px-2 py-1 rounded-md ml-2">
-              {auth.user()?.id}
+              {auth.user()?.bungie_global_display_name}
             </span>
           </p>
           <button
