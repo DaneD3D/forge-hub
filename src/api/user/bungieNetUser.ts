@@ -1,7 +1,7 @@
 import { getBungieNetUserById } from "bungie-api-ts/user";
-import { httpClient } from "../utils/httpClient";
+import { httpClient } from "../../utils/httpClient";
 
-export async function fetchBungieNetUser(membershipId: string) {
+export async function fetchBungieNetUserById(membershipId: string) {
   try {
     const response = await getBungieNetUserById(httpClient, { id: membershipId });
     if (response.ErrorCode === 1) {
