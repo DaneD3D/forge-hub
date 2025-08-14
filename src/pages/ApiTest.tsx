@@ -2,7 +2,6 @@ import { createResource, Show } from "solid-js";
 import { useAuth } from "../hooks/AuthContext";
 import { fetchBungieNetUserById } from "../api/user/bungieNetUser";
 import { fetchProfile } from "../api/destiny2/getProfile";
-import { httpClient } from "../utils/httpClient"; // Import the httpClient from its module
 
 function ApiTest() {
   const auth = useAuth();
@@ -18,7 +17,7 @@ function ApiTest() {
 
   const [profileData, { refetch: refetchProfile }] = createResource(() =>
     fetchProfile(
-      httpClient, // Use the imported httpClient
+      auth.httpClient(),
       membershipId,
       Number(membershipType)
     )

@@ -1,9 +1,10 @@
 import { getBungieNetUserById } from "bungie-api-ts/user";
-import { httpClient } from "../../utils/httpClient";
+import { useAuth } from "../../hooks/AuthContext";
 
 export async function fetchBungieNetUserById(membershipId: string) {
+  const auth = useAuth();
   try {
-    const response = await getBungieNetUserById(httpClient, { id: membershipId });
+    const response = await getBungieNetUserById(auth.httpClient(), { id: membershipId });
     if (response.ErrorCode === 1) {
       return response.Response;
     } else {
