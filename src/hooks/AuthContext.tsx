@@ -12,12 +12,12 @@ export interface User {
 }
 
 export interface BungieTokenResponse {
-  access_token: string;
+  token: string;
   expires_in: number;
   membership_id: string;
   membership_type: number;
   token_type: string;
-  linkedProfiles?: DestinyLinkedProfilesResponse;
+  refresh_expires_in?: number;
 }
 
 export interface AuthContextType {
@@ -77,27 +77,45 @@ export const AuthProvider = (props: { children: any }) => {
         }
         const data = await response.json();
         return {
-            access_token: data.access_token,
+            token: data.access_token,
             expires_in: data.expires_in,
             membership_id: data.membership_id,
             membership_type: data.membership_type,
             token_type: data.token_type,
-            linkedProfiles: data.linkedProfiles,
+            refresh_expires_in: data.refresh_expires_in,
         };
     };
 
     // New: handles both exchange and login
     const exchangeAuthorizationCodeAndLogin = async (code: string, state: string) => {
-        const tokenResponse = await exchangeAuthorizationCode(code, state);
-        const profile = tokenResponse.linkedProfiles?.profiles?.[0];
+        const payload = { code, state };
+        const response = await fetch("https://68tctxxzd8.execute-api.us-east-1.amazonaws.com/default/BungieOAuthHandoff", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+        if (!response.ok) {
+            const errorBody = await response.json().catch(() => ({}));
+            throw new Error(`Failed to exchange token: ${response.statusText}. Detail: ${JSON.stringify(errorBody)}`);
+        }
+        const data = await response.json();
+        const profile = data.linkedProfiles?.profiles?.[0];
         if (!profile) throw new Error("No profile found in token response");
         const userProfile: User = {
-            bungieMembershipId: tokenResponse.membership_id,
+            bungieMembershipId: data.membership_id,
             destinyMembershipId: profile.membershipId,
             destinyMembershipType: profile.membershipType,
             bungieGlobalDisplayName: profile.bungieGlobalDisplayName,
             bungieGlobalDisplayNameCode: profile.bungieGlobalDisplayNameCode,
             applicableMembershipTypes: profile.applicableMembershipTypes,
+        };
+        const tokenResponse: BungieTokenResponse = {
+            token: data.access_token,
+            expires_in: data.expires_in,
+            membership_id: data.membership_id,
+            membership_type: data.membership_type,
+            token_type: data.token_type,
+            refresh_expires_in: data.refresh_expires_in,
         };
         login(userProfile, tokenResponse);
     };
