@@ -1,6 +1,5 @@
 import { createResource, Show } from "solid-js";
 import { useAuth } from "../hooks/AuthContext";
-import { fetchBungieNetUserById } from "../api/user/bungieNetUser";
 import { fetchProfile } from "../api/destiny2/getProfile";
 
 function ApiTest() {
@@ -10,46 +9,14 @@ function ApiTest() {
   const membershipId = user?.bungieMembershipId;
   const membershipType = user?.bungieMembershipType;
 
-  const [userData, { refetch }] = createResource(() =>
-    fetchBungieNetUserById(membershipId)
-  );
-
-  const [profileData, { refetch: refetchProfile }] = createResource(() =>
-    fetchProfile(
-      auth.httpClient(),
-      membershipId,
-      membershipType
-    )
-  );
-
   return (
     <div class="text-white p-8">
       <h1 class="text-2xl font-bold mb-4">API Test Page</h1>
       <p class="mb-4">This is a test page for API calls.</p>
-      <button
-        class="py-2 px-4 rounded-md font-semibold bg-gray-700 hover:bg-gray-600 transition-colors"
-        onClick={() => refetch()}
-      >
-        Test Bungie User Net ID API Call
-      </button>
-      <Show when={userData.loading}>
-        <p>Loading...</p>
-      </Show>
-      <Show when={userData.error}>
-        <p class="text-red-500">Error: {userData.error.message}</p>
-      </Show>
-      <Show when={userData()}>
-        {data => (
-          <pre class="bg-gray-800 p-4 rounded mt-4 overflow-x-auto">
-            {JSON.stringify(data, null, 2)}
-          </pre>
-        )}
-      </Show>
       <div class="mt-8">
         <h2 class="text-xl font-semibold mb-2">User Information</h2>
         <p><strong>Membership ID:</strong> {membershipId}</p>
-        <p><strong>Access Token:</strong> {tokens?.access_token || "N/A"}</p>
-        <p><strong>User Data:</strong> {JSON.stringify(userData(), null, 2) || "N/A"}</p>
+        <p><strong>Membership Type:</strong> {membershipType}</p>
       </div>
 
       <div class="mt-8">
@@ -63,26 +30,6 @@ function ApiTest() {
           <p class="text-red-500">You are not authenticated. Please log in.</p>
         </Show>
       </div>
-
-      <button
-        class="py-2 px-4 rounded-md font-semibold bg-blue-700 hover:bg-blue-600 transition-colors ml-4"
-        onClick={() => refetchProfile()}
-      >
-        Test Destiny2 getProfile API Call
-      </button>
-      <Show when={profileData.loading}>
-        <p>Loading profile...</p>
-      </Show>
-      <Show when={profileData.error}>
-        <p class="text-red-500">Profile Error: {profileData.error.message}</p>
-      </Show>
-      <Show when={profileData()}>
-        {data => (
-          <pre class="bg-gray-800 p-4 rounded mt-4 overflow-x-auto">
-            {JSON.stringify(data, null, 2)}
-          </pre>
-        )}
-      </Show>
     </div>
   );
 }
