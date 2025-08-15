@@ -10,7 +10,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "generate:env": "node generate-env-json.js",
-    "dev:full": "pnpm generate:env && concurrently \"pnpm dev\" \"sam local start-api --template lambda.yaml --env-vars dev-env.json\""
+    "dev:full": "concurrently \"pnpm dev\" \"./start-backend.sh\""
   },
   "license": "MIT",
   "devDependencies": {
