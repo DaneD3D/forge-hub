@@ -1,5 +1,5 @@
 import { Show } from "solid-js";
-import { useAuth } from "../hooks/AuthContext";
+import { useAuth } from "../hooks/AuthContext.tsx";
 
 function ProtectedPage() {
   const auth = useAuth();
@@ -24,6 +24,7 @@ function ProtectedPage() {
             </span>
           </p>
           <button
+            type="button"
             onClick={() => auth.logout()}
             class="py-2 px-4 rounded-md font-semibold bg-gray-700 hover:bg-gray-600 transition-colors"
           >

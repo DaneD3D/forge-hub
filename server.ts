@@ -2,7 +2,7 @@
  * A simple Deno server to serve static files from the 'dist' directory.
  * This is used in the Docker container to host the built SolidJS application.
  */
-import { serveDir } from "https://deno.land/std@0.224.0/http/serve-dir.ts";
+import { serveDir } from "https://deno.land/std@0.224.0/http/file_server.ts";
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
 // Set the port to listen on. Deno's default is 8000.

@@ -1,5 +1,5 @@
 import { onMount } from "solid-js";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./AuthContext.tsx";
 import { useNavigate } from "@solidjs/router";
 
 function OAuthCallback() {
@@ -7,7 +7,7 @@ function OAuthCallback() {
   const navigate = useNavigate();
 
   onMount(async () => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(globalThis.location.search);
     const code = params.get('code');
     const state = params.get('state');
 

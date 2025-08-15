@@ -1,6 +1,5 @@
-import { createContext, createSignal, useContext, onMount, Accessor } from 'solid-js';
-import { httpClient } from '../utils/httpClient';
-import { DestinyLinkedProfilesResponse } from 'bungie-api-ts/destiny2';
+import { createContext, createSignal, useContext, onMount, Accessor, JSX } from 'solid-js';
+import { httpClient } from '../utils/httpClient.ts';
 
 export interface User {
   bungie_membership_id: string;
@@ -33,7 +32,7 @@ export interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>();
 
-export const AuthProvider = (props: { children: any }) => {
+export const AuthProvider = (props: { children: JSX.Element }) => {
     const [user, setUser] = createSignal<User | null>(null);
     const [tokens, setTokens] = createSignal<BungieTokenResponse | null>(null);
 

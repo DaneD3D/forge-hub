@@ -1,5 +1,5 @@
-import { createResource, Show } from "solid-js";
-import { useAuth } from "../hooks/AuthContext";
+import { Show } from "solid-js";
+import { useAuth } from "../hooks/AuthContext.tsx";
 import { getProfile, GetProfileParams } from "bungie-api-ts/destiny2";
 
 function ApiTest() {
@@ -13,10 +13,6 @@ function ApiTest() {
     membershipType: membershipType,
     components: [100, 200, 201, 202, 205, 300, 301, 302, 304, 305, 306]
   };
-
-  const getProfileResource = createResource(() =>
-    membershipId && membershipType ? getProfile(auth.httpClient(), GetProfileParams) : null
-  );
 
   return (
     <div class="text-white p-8">
@@ -39,6 +35,7 @@ function ApiTest() {
         </Show>
 
         <button
+          type="button"
           onClick={async () => {
             if (membershipId && membershipType) {
               try {

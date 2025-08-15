@@ -3,5 +3,7 @@
         "start": "deno run --allow-net --allow-read server.ts"
     },
     "lint": {},
-    "importMap": "import_map.json"
+    "imports": {
+        "http-file-server/": "jsr:@deno/http-file-server/"
+    }
 }

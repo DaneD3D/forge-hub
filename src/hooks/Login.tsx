@@ -7,7 +7,7 @@ function Login() {
         const state = Math.random().toString(36).substring(2, 15);
         localStorage.setItem('bungie_oauth_state', state);
         const url = `${AUTH_URL}?client_id=${CLIENT_ID}&response_type=code&state=${state}&redirect_uri=${REDIRECT_URI}`;
-        window.location.href = url;
+        globalThis.location.href = url;
     };
 
   return (
@@ -18,6 +18,7 @@ function Login() {
           Sign in to access your Destiny 2 information.
         </p>
         <button
+          type="button"
           onClick={handleLogin}
           class="w-full py-3 px-6 rounded-md font-semibold text-lg bg-orange-600 hover:bg-orange-700 transition-colors duration-200 ease-in-out shadow-lg"
         >
