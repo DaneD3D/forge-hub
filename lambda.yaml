@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  AWS SAM template for the Bungie OAuth handoff Lambda function.
+
+Globals:
+  Function:
+    # Timeout is optional, but it's good practice to set it.
+    Timeout: 30
+
+Resources:
+  # The name of your Lambda function. You can change this.
+  BungieOAuthHandoffFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      # The path to your Lambda code directory.
+      # If your file is at the root of your project, use '.'
+      CodeUri: ./
+      # The file and handler function name.
+      # Assumes your file is named 'lambda.js' and the handler is 'handler'.
+      Handler: lambda.handler
+      # The runtime for your function.
+      # Deno is not a native runtime, but we can use Node.js as the base.
+      # You'll need to bundle your Deno code to be compatible with Node.js.
+      # If you are using a custom Deno runtime, this will be different.
+      Runtime: nodejs20.x
+      Architectures:
+        - x86_64
+
+      # This defines the API Gateway endpoint that triggers the function.
+      Events:
+        BungieOAuthAPI:
+          Type: Api
+          Properties:
+            Path: /BungieOAuthHandoff
+            Method: post

@@ -8,11 +8,14 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "generate:env": "node generate-env-json.js",
+    "dev:full": "pnpm generate:env && concurrently \"pnpm dev\" \"sam local start-api --template lambda.yaml --env-vars dev-env.json\""
   },
   "license": "MIT",
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.7",
+    "concurrently": "^9.2.0",
     "tailwindcss": "^4.0.7",
     "typescript": "^5.7.2",
     "vite": "^6.0.0",
