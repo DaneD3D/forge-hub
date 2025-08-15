@@ -16,6 +16,8 @@
                     "target": {
                         "type": "fargate"
                     },
+                    "cpu": 0.5,
+                    "memory": 1,
                     "buildType": "docker",
                     "dockerfilePath": "Dockerfile",
                     "dockerContext": ".",
