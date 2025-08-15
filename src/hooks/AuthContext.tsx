@@ -62,8 +62,12 @@ export const AuthProvider = (props: { children: JSX.Element }) => {
     };
 
 
-    // Moved from OAuthCallback.tsx
-    const exchangeAuthorizationCode = async (code: string, state: string): Promise<BungieTokenResponse> => {
+    // Consolidated function: exchanges code and optionally logs in
+    const exchangeAuthorizationCode = async (
+        code: string,
+        state: string,
+        loginAfterExchange: boolean = false
+    ): Promise<BungieTokenResponse> => {
         const payload = { code, state };
         const response = await fetch("https://68tctxxzd8.execute-api.us-east-1.amazonaws.com/default/BungieOAuthHandoff", {
             method: "POST",
@@ -75,39 +79,6 @@ export const AuthProvider = (props: { children: JSX.Element }) => {
             throw new Error(`Failed to exchange token: ${response.statusText}. Detail: ${JSON.stringify(errorBody)}`);
         }
         const data = await response.json();
-        return {
-            token: data.access_token,
-            expires_in: data.expires_in,
-            bungie_membership_id: data.membership_id,
-            membership_type: data.membership_type,
-            token_type: data.token_type,
-            refresh_expires_in: data.refresh_expires_in,
-        };
-    };
-
-    // New: handles both exchange and login
-    const exchangeAuthorizationCodeAndLogin = async (code: string, state: string) => {
-        const payload = { code, state };
-        const response = await fetch("https://68tctxxzd8.execute-api.us-east-1.amazonaws.com/default/BungieOAuthHandoff", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        });
-        if (!response.ok) {
-            const errorBody = await response.json().catch(() => ({}));
-            throw new Error(`Failed to exchange token: ${response.statusText}. Detail: ${JSON.stringify(errorBody)}`);
-        }
-        const data = await response.json();
-        const profile = data.linkedProfiles?.profiles?.[0];
-        if (!profile) throw new Error("No profile found in token response");
-        const userProfile: User = {
-            bungie_membership_id: data.membership_id,
-            destiny_membership_id: profile.membershipId,
-            destiny_membership_type: profile.membershipType,
-            bungie_global_display_name: profile.bungieGlobalDisplayName,
-            bungie_global_display_name_code: profile.bungieGlobalDisplayNameCode,
-            applicable_membership_types: profile.applicableMembershipTypes,
-        };
         const tokenResponse: BungieTokenResponse = {
             token: data.access_token,
             expires_in: data.expires_in,
@@ -116,7 +87,25 @@ export const AuthProvider = (props: { children: JSX.Element }) => {
             token_type: data.token_type,
             refresh_expires_in: data.refresh_expires_in,
         };
-        login(userProfile, tokenResponse);
+        if (loginAfterExchange) {
+            const profile = data.linkedProfiles?.profiles?.[0];
+            if (!profile) throw new Error("No profile found in token response");
+            const userProfile: User = {
+                bungie_membership_id: data.membership_id,
+                destiny_membership_id: profile.membershipId,
+                destiny_membership_type: profile.membershipType,
+                bungie_global_display_name: profile.bungieGlobalDisplayName,
+                bungie_global_display_name_code: profile.bungieGlobalDisplayNameCode,
+                applicable_membership_types: profile.applicableMembershipTypes,
+            };
+            login(userProfile, tokenResponse);
+        }
+        return tokenResponse;
+    };
+
+    // Wrapper for compatibility
+    const exchangeAuthorizationCodeAndLogin = async (code: string, state: string) => {
+        await exchangeAuthorizationCode(code, state, true);
     };
 
     const value: AuthContextType = {
