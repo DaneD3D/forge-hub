@@ -5,6 +5,8 @@ dist
 .netlify
 .vinxi
 app.config.timestamp_*.js
+samconfig.toml
+dev-env.json
 
 # Environment
 .env
