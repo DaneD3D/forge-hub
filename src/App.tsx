@@ -4,6 +4,7 @@ import OAuthCallback from './hooks/OAuthCallback.tsx';
 import ProtectedPage from './pages/ProtectedPage.tsx';
 import NavBar from './components/navBar.tsx';
 import ApiTest from './pages/ApiTest.tsx';
+import Vault from './pages/Vault.tsx';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/oauth-callback" component={OAuthCallback} />
         <Route path="/profile" component={ProtectedPage} />
         <Route path="/apiTest" component={ApiTest} />
+        <Route path="/vault" component={Vault} />
       </Router>
     </div>
   );

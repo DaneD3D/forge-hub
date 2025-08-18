@@ -9,13 +9,14 @@ function NavBar() {
                 <div class="flex items-center gap-4">
                     <a href="/" class="text-gray-300 hover:text-white px-3 py-2">Home</a>
                     <a href="/profile" class="text-gray-300 hover:text-white px-3 py-2">Profile</a>
+                    <a href="/vault" class="text-gray-300 hover:text-white px-3 py-2">Vault</a>
                     {auth.isAuthenticated() ? (
                         <span class="text-green-400 font-semibold px-3 py-2">Authenticated as {auth.user()?.bungie_global_display_name}</span>
                     ) : (
                         <span class="text-red-400 font-semibold px-3 py-2">Not Authenticated</span>
                     )}
                     <a href="/apiTest" class="text-gray-300 hover:text-white px-3 py-2">API Test</a>
-                    <a href="/" onClick={() => auth.logout()} class="text-gray-300 hover:text-white px-3 py-2">Logout</a>
+                    <a href="/" onClick={() => auth.logout()} class="text-gray-300 hover:text-white px-3 py-2">Logout</a> 
                 </div>
             </div>
         </nav>
