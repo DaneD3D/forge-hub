@@ -1,4 +1,6 @@
 #!/bin/sh
+# Generate environment file before starting backend
+pnpm generate:env
 
 # Check if Docker is running
 docker info >/dev/null 2>&1
@@ -8,4 +10,4 @@ if [ $? -ne 0 ]; then
 fi
 
 # Start the SAM API
-sam local start-api --template lambda.yaml --env-vars dev-env.json
+sam local start-api --template lambda.yaml --env-vars ./dev-env.json

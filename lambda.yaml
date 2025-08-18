@@ -15,7 +15,7 @@ Resources:
     Properties:
       # The path to your Lambda code directory.
       # If your file is at the root of your project, use '.'
-      CodeUri: ./
+      CodeUri: .
       # The file and handler function name.
       # Assumes your file is named 'lambda.js' and the handler is 'handler'.
       Handler: lambda.handler
@@ -33,4 +33,11 @@ Resources:
           Type: Api
           Properties:
             Path: /BungieOAuthHandoff
-            Method: post
+            Method: ANY
+
+      Environment:
+        Variables:
+          CLIENT_ID: ""
+          CLIENT_SECRET: ""
+          API_KEY: ""
+          REDIRECT_URI: ""

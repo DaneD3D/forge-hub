@@ -16,14 +16,6 @@ version = 0.1
 [default.local_lambda]
 # Parameters for running Lambda locally.
 [default.local_lambda.parameters]
-environment = """
-{
-  "CLIENT_ID": "your_dev_client_id",
-  "CLIENT_SECRET": "your_dev_client_secret",
-  "API_KEY": "your_dev_api_key",
-  "REDIRECT_URI": "http://127.0.0.1:3000/default/BungieOAuthHandoff"
-}
-"""
 
 [default.local_api]
 # Parameters for running the API Gateway locally.

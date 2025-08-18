@@ -1,7 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const envFilePath = path.resolve('.env');
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const envFilePath = path.resolve(scriptDir, '.env');
 const envVars = fs.readFileSync(envFilePath, 'utf8').split('\n');
 
 const backendEnv = {};
@@ -19,6 +21,6 @@ const samEnv = {
   BungieOAuthHandoffFunction: backendEnv
 };
 
-fs.writeFileSync('dev-env.json', JSON.stringify(samEnv, null, 2));
+fs.writeFileSync(path.join(scriptDir, 'dev-env.json'), JSON.stringify(samEnv, null, 2));
 
 console.log('Generated dev-env.json from .env file.');

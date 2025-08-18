@@ -3,14 +3,22 @@
 
 import https from 'node:https';
 import querystring from 'node:querystring';
-import process from 'node:process';
 
-// Main handler for the Lambda function
-export const handler = async (event) => {
+export async function handler(event) {
+    // Check and log missing environment variables at the start
+    const missingEnvVars = [];
+    if (!process.env.CLIENT_ID) missingEnvVars.push('CLIENT_ID');
+    if (!process.env.CLIENT_SECRET) missingEnvVars.push('CLIENT_SECRET');
+    if (!process.env.API_KEY) missingEnvVars.push('API_KEY');
+    if (!process.env.REDIRECT_URI) missingEnvVars.push('REDIRECT_URI');
+    if (missingEnvVars.length > 0) {
+        console.error('Missing environment variables:', missingEnvVars.join(', '));
+    }
+
     console.log('Received event:', JSON.stringify(event, null, 2));
 
     // Handle preflight OPTIONS request
-    if (event.requestContext.http.method === 'OPTIONS') {
+    if (event.httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,
             headers: {
@@ -29,6 +37,11 @@ export const handler = async (event) => {
         console.error('Failed to parse request body:', e);
         return {
             statusCode: 400,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "POST,OPTIONS"
+            },
             body: JSON.stringify({ message: 'Invalid request body format.' }),
         };
     }
@@ -38,6 +51,11 @@ export const handler = async (event) => {
     if (!code || !state) {
         return {
             statusCode: 400,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "POST,OPTIONS"
+            },
             body: JSON.stringify({ message: 'Missing authorization code or state parameter in body.' }),
         };
     }
@@ -50,6 +68,11 @@ export const handler = async (event) => {
     if (!clientId || !clientSecret || !apiKey || !redirectUri) {
         return {
             statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "POST,OPTIONS"
+            },
             body: JSON.stringify({ message: 'Server configuration error: Missing environment variables.' }),
         };
     }
@@ -152,7 +175,12 @@ export const handler = async (event) => {
         console.error('Unhandled error in handler:', error);
         return {
             statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "POST,OPTIONS"
+            },
             body: JSON.stringify({ message: 'Internal Server Error', detail: error.message }),
         };
     }
-};
+}
