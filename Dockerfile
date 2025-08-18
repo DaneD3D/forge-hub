@@ -23,23 +23,19 @@ COPY . .
 # Build the SolidJS application.
 RUN pnpm run build
 
-# --- Stage 2: Serve the application with Deno ---
-# Use the official Deno alpine image for a small, secure runtime.
-FROM denoland/deno:alpine
+
+# --- Stage 2: Serve the application with Node.js ---
+FROM node:18-alpine AS serve
 
 # Set the working directory for the server.
 WORKDIR /app
 
 # Copy the server script and the built assets from the build stage.
-# The server.ts script will be our simple web server.
 COPY server.ts ./
 COPY --from=build /app/dist /app/dist
 
-# Expose the port Deno will listen on (default is 8000).
-# Flightcontrol will map this to a publicly accessible port.
+# Expose the port Node will listen on (default is 8000).
 EXPOSE 8000
 
-# Run the Deno server script. We must grant network and read permissions.
-# The '--allow-net' permission is for the server to listen for requests.
-# The '--allow-read' permission is for the server to read the static files from the 'dist' directory.
-CMD ["deno", "run", "--allow-net", "--allow-read=./dist", "server.ts"]
+# Run the Node.js server script.
+CMD ["node", "server.ts"]
