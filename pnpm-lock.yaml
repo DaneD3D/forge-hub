@@ -21,6 +21,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.0.7
         version: 4.0.7(vite@6.0.0(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.1))
+      '@vitejs/plugin-basic-ssl':
+        specifier: ^2.1.0
+        version: 2.1.0(vite@6.0.0(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.1))
       concurrently:
         specifier: ^9.2.0
         version: 9.2.0
@@ -496,6 +499,12 @@ packages:
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
+
+  '@vitejs/plugin-basic-ssl@2.1.0':
+    resolution: {integrity: sha512-dOxxrhgyDIEUADhb/8OlV9JIqYLgos03YorAueTIeOUskLJSEsfwCByjbu98ctXitUN3znXKp0bYD/WHSudCeA==}
+    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
+    peerDependencies:
+      vite: ^6.0.0 || ^7.0.0
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -1303,6 +1312,10 @@ snapshots:
       '@babel/types': 7.23.6
 
   '@types/estree@1.0.6': {}
+
+  '@vitejs/plugin-basic-ssl@2.1.0(vite@6.0.0(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.1))':
+    dependencies:
+      vite: 6.0.0(jiti@2.4.2)(lightningcss@1.29.1)(yaml@2.6.1)
 
   ansi-regex@5.0.1: {}
 
