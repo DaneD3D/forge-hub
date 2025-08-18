@@ -10,7 +10,7 @@ function OAuthCallback() {
     const params = new URLSearchParams(globalThis.location.search);
     const code = params.get('code');
     const state = params.get('state');
-
+    
     const storedState = localStorage.getItem('bungie_oauth_state');
     
     // Always validate the state to prevent CSRF attacks
@@ -18,10 +18,12 @@ function OAuthCallback() {
       console.error("State mismatch. Possible CSRF attack.");
       return;
     }
+    console.log('OAuthCallback mounted', { code, state, storedState });
     
     // Now check that both code and state exist before proceeding
     if (code && state) {
       try {
+        console.log('Proceeding with token exchange')
         await auth.exchangeAuthorizationCodeAndLogin(code, state);
         navigate("/profile");
       } catch (error) {

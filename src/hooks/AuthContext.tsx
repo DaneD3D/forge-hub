@@ -61,6 +61,7 @@ export const AuthProvider = (props: { children: JSX.Element }) => {
         localStorage.removeItem("tokens");
     };
 
+    const BUNGIE_OAUTH_HANDOFF_URL = import.meta.env.VITE_BUNGIE_OAUTH_HANDOFF_URL;
 
     // Consolidated function: exchanges code and optionally logs in
     const exchangeAuthorizationCode = async (
@@ -69,7 +70,7 @@ export const AuthProvider = (props: { children: JSX.Element }) => {
         loginAfterExchange: boolean = false
     ): Promise<BungieTokenResponse> => {
         const payload = { code, state };
-        const response = await fetch("https://68tctxxzd8.execute-api.us-east-1.amazonaws.com/default/BungieOAuthHandoff", {
+        const response = await fetch(BUNGIE_OAUTH_HANDOFF_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),

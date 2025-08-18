@@ -1,9 +1,9 @@
 import { Router, Route, RouteSectionProps } from '@solidjs/router';
-import Login from './hooks/Login';
-import OAuthCallback from './hooks/OAuthCallback';
-import ProtectedPage from './pages/ProtectedPage';
-import NavBar from './components/navBar';
-import ApiTest from './pages/ApiTest';
+import Login from './hooks/Login.tsx';
+import OAuthCallback from './hooks/OAuthCallback.tsx';
+import ProtectedPage from './pages/ProtectedPage.tsx';
+import NavBar from './components/navBar.tsx';
+import ApiTest from './pages/ApiTest.tsx';
 
 function App() {
   return (
