@@ -17,12 +17,23 @@ export async function handler(event) {
 
     console.log('Received event:', JSON.stringify(event, null, 2));
 
+    // CORS: Only allow 127.0.0.1, localhost (http/https), and https://forgehub.app/
+    const allowedOrigins = [
+        'http://127.0.0.1',
+        'https://127.0.0.1',
+        'http://localhost',
+        'https://localhost',
+        'https://forgehub.app'
+    ];
+    const requestOrigin = event.headers?.origin || event.headers?.Origin || '';
+    const allowOrigin = allowedOrigins.includes(requestOrigin) ? requestOrigin : '';
+
     // Handle preflight OPTIONS request
     if (event.httpMethod === 'OPTIONS') {
         return {
             statusCode: 200,
             headers: {
-                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Origin": allowOrigin,
                 "Access-Control-Allow-Headers": "Content-Type",
                 "Access-Control-Allow-Methods": "POST,OPTIONS"
             },
@@ -38,7 +49,7 @@ export async function handler(event) {
         return {
             statusCode: 400,
             headers: {
-                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Origin": allowOrigin,
                 "Access-Control-Allow-Headers": "Content-Type",
                 "Access-Control-Allow-Methods": "POST,OPTIONS"
             },
@@ -52,7 +63,7 @@ export async function handler(event) {
         return {
             statusCode: 400,
             headers: {
-                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Origin": allowOrigin,
                 "Access-Control-Allow-Headers": "Content-Type",
                 "Access-Control-Allow-Methods": "POST,OPTIONS"
             },
@@ -69,7 +80,7 @@ export async function handler(event) {
         return {
             statusCode: 500,
             headers: {
-                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Origin": allowOrigin,
                 "Access-Control-Allow-Headers": "Content-Type",
                 "Access-Control-Allow-Methods": "POST,OPTIONS"
             },
@@ -163,7 +174,7 @@ export async function handler(event) {
         return {
             statusCode: 200,
             headers: {
-                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Origin": allowOrigin,
                 "Access-Control-Allow-Credentials": true,
                 "Access-Control-Allow-Headers": "Content-Type",
                 "Access-Control-Allow-Methods": "POST,OPTIONS"
@@ -176,7 +187,7 @@ export async function handler(event) {
         return {
             statusCode: 500,
             headers: {
-                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Origin": allowOrigin,
                 "Access-Control-Allow-Headers": "Content-Type",
                 "Access-Control-Allow-Methods": "POST,OPTIONS"
             },
