@@ -1,10 +1,9 @@
 // This Lambda function handles the OAuth 2.0 authorization code handoff
 // for the Bungie API. It's triggered by an API Gateway endpoint.
 
-import https from 'node:https';
-import querystring from 'node:querystring';
-import process from 'node:process';
-import { console } from 'node:console';
+import https from 'https';
+import querystring from 'querystring';
+import process from 'process';
 
 export async function handler(event) {
   // Check and log missing environment variables at the start

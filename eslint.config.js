@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 
 export default [
   {
-    ignores: ['.gitignore', 'dist/', 'node_modules/'],
+    ignores: ['.gitignore', 'dist/', 'node_modules/', 'lambda.js'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
