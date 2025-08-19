@@ -1,5 +1,5 @@
 import { Show } from "solid-js";
-import { useAuth } from "../hooks/AuthContext.tsx";
+import { useAuth } from "../hooks/AuthContext";
 import { getProfile, GetProfileParams } from "bungie-api-ts/destiny2";
 
 function ApiTest() {

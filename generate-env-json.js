@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import console from 'node:console';
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const envFilePath = path.resolve(scriptDir, '.env');

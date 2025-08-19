@@ -3,6 +3,8 @@
 
 import https from 'node:https';
 import querystring from 'node:querystring';
+import process from 'node:process';
+import {console} from 'node:console';
 
 export async function handler(event) {
     // Check and log missing environment variables at the start
@@ -115,7 +117,7 @@ export async function handler(event) {
                         try {
                             resolve(JSON.parse(data));
                         } catch (e) {
-                            reject(new Error('Failed to parse Bungie token response.'));
+                            reject(new Error('Failed to parse Bungie token response.', e));
                         }
                     } else {
                         // Log the full error from Bungie's API
@@ -145,7 +147,7 @@ export async function handler(event) {
                         try {
                             resolve(JSON.parse(data));
                         } catch (e) {
-                            reject(new Error('Failed to parse linked profiles response.'));
+                            reject(new Error('Failed to parse linked profiles response.', e));
                         }
                     } else {
                         // Log the full error from Bungie's API
