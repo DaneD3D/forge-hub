@@ -12,18 +12,22 @@
     "generate:env": "node generate-env-json.js",
     "dev:full": "concurrently \"pnpm dev\" \"./start-backend.sh\"",
     "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "eslint . --ext .ts,.tsx --fix"
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^9.33.0",
     "@tailwindcss/vite": "^4.0.7",
+    "@types/node": "^24.3.0",
     "@typescript-eslint/eslint-plugin": "^8.40.0",
     "@typescript-eslint/parser": "^8.40.0",
     "@vitejs/plugin-basic-ssl": "^2.1.0",
     "concurrently": "^9.2.0",
     "eslint": "^9.33.0",
     "eslint-plugin-solid": "^0.14.5",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4.0.7",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.40.0",

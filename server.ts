@@ -1,14 +1,16 @@
-
 /**
  * A simple Node.js server to serve static files from the 'dist' directory.
  * This is used in the Docker container to host the built SolidJS application.
  */
-import http from 'node:http';
-import path from 'node:path';
-import fs from 'node:fs';
+import http from 'http';
+import path from 'path';
+import fs from 'fs';
 
 const PORT = 8000;
-const FILE_SERVER_ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), 'dist');
+const FILE_SERVER_ROOT = path.resolve(
+  path.dirname(new URL(import.meta.url).pathname),
+  'dist',
+);
 
 const mimeTypes: Record<string, string> = {
   '.html': 'text/html',
@@ -23,7 +25,10 @@ const mimeTypes: Record<string, string> = {
 };
 
 const server = http.createServer((req, res) => {
-  const filePath = path.join(FILE_SERVER_ROOT, req.url === '/' ? '/index.html' : req.url);
+  const filePath = path.join(
+    FILE_SERVER_ROOT,
+    req.url === '/' ? '/index.html' : req.url,
+  );
   // Prevent directory traversal
   if (!filePath.startsWith(FILE_SERVER_ROOT)) {
     res.writeHead(403);
@@ -37,11 +42,15 @@ const server = http.createServer((req, res) => {
       return;
     }
     const ext = path.extname(filePath);
-    res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' });
+    res.writeHead(200, {
+      'Content-Type': mimeTypes[ext] || 'application/octet-stream',
+    });
     fs.createReadStream(filePath).pipe(res);
   });
 });
 
 server.listen(PORT, () => {
-  console.log(`Serving static files from '${FILE_SERVER_ROOT}' on http://localhost:${PORT}`);
+  console.log(
+    `Serving static files from '${FILE_SERVER_ROOT}' on http://localhost:${PORT}`,
+  );
 });

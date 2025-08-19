@@ -1,6 +1,6 @@
-import { onMount } from "solid-js";
-import { useAuth } from "./AuthContext.tsx";
-import { useNavigate } from "@solidjs/router";
+import { onMount } from 'solid-js';
+import { useAuth } from './AuthContext.tsx';
+import { useNavigate } from '@solidjs/router';
 
 function OAuthCallback() {
   const auth = useAuth();
@@ -10,24 +10,24 @@ function OAuthCallback() {
     const params = new URLSearchParams(globalThis.location.search);
     const code = params.get('code');
     const state = params.get('state');
-    
+
     const storedState = localStorage.getItem('bungie_oauth_state');
-    
+
     // Always validate the state to prevent CSRF attacks
     if (state !== storedState) {
-      console.error("State mismatch. Possible CSRF attack.");
+      console.error('State mismatch. Possible CSRF attack.');
       return;
     }
     console.log('OAuthCallback mounted', { code, state, storedState });
-    
+
     // Now check that both code and state exist before proceeding
     if (code && state) {
       try {
-        console.log('Proceeding with token exchange')
+        console.log('Proceeding with token exchange');
         await auth.exchangeAuthorizationCodeAndLogin(code, state);
-        navigate("/profile");
+        navigate('/profile');
       } catch (error) {
-        console.error("Token exchange failed:", error);
+        console.error('Token exchange failed:', error);
       }
     }
   });
