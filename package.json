@@ -25,7 +25,9 @@
   "dependencies": {
     "@solidjs/router": "^0.15.3",
     "bungie-api-ts": "^5.5.0",
-    "solid-js": "^1.9.5"
+    "solid-js": "^1.9.5",
+    "sqlite3": "^5.1.7",
+    "unzipit": "^1.4.3"
   },
   "packageManager": "pnpm@10.13.1",
   "engines": {
