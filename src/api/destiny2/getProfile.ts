@@ -1,10 +1,10 @@
-import { HttpClient } from "bungie-api-ts/http";
-import { getProfile } from "bungie-api-ts/destiny2";
+import { HttpClient } from 'bungie-api-ts/http';
+import { getProfile } from 'bungie-api-ts/destiny2';
 
 export async function fetchProfile(
   http: HttpClient,
   membershipId: string,
-  membershipType: number
+  membershipType: number,
 ) {
   try {
     const response = await getProfile(http, {
@@ -20,11 +20,11 @@ export async function fetchProfile(
     if (response.ErrorCode === 1) {
       return response.Response;
     } else {
-      console.error("Error fetching profile:", response.Message);
+      console.error('Error fetching profile:', response.Message);
       return null;
     }
   } catch (error) {
-    console.error("Network or other error:", error);
+    console.error('Network or other error:', error);
     return null;
   }
 }

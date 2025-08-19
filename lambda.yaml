@@ -37,7 +37,7 @@ Resources:
 
       Environment:
         Variables:
-          CLIENT_ID: ""
-          CLIENT_SECRET: ""
-          API_KEY: ""
-          REDIRECT_URI: ""
+          CLIENT_ID: ''
+          CLIENT_SECRET: ''
+          API_KEY: ''
+          REDIRECT_URI: ''

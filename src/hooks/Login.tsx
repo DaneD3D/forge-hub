@@ -1,14 +1,14 @@
 function Login() {
-    const AUTH_URL = import.meta.env.VITE_AUTH_URL;
-    const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-    const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+  const AUTH_URL = import.meta.env.VITE_AUTH_URL;
+  const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+  const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
 
-    const handleLogin = () => {
-        const state = Math.random().toString(36).substring(2, 15);
-        localStorage.setItem('bungie_oauth_state', state);
-        const url = `${AUTH_URL}?client_id=${CLIENT_ID}&response_type=code&state=${state}&redirect_uri=${REDIRECT_URI}`;
-        globalThis.location.href = url;
-    };
+  const handleLogin = () => {
+    const state = Math.random().toString(36).substring(2, 15);
+    localStorage.setItem('bungie_oauth_state', state);
+    const url = `${AUTH_URL}?client_id=${CLIENT_ID}&response_type=code&state=${state}&redirect_uri=${REDIRECT_URI}`;
+    globalThis.location.href = url;
+  };
 
   return (
     <div class="flex items-center justify-center min-h-screen bg-gray-900 text-white p-4">
