@@ -5,12 +5,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/download-sql-wasm.js",
+    "prebuild": "node scripts/download-sql-wasm.js",
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
     "generate:env": "node generate-env-json.js",
-    "dev:full": "concurrently \"pnpm dev\" \"./start-backend.sh\"",
+    "dev:full": "concurrently \"node scripts/download-sql-wasm.js && pnpm dev\" \"./start-backend.sh\"",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write .",
@@ -38,6 +40,7 @@
     "@solidjs/router": "^0.15.3",
     "bungie-api-ts": "^5.5.0",
     "solid-js": "^1.9.5",
+    "sql.js": "^1.13.0",
     "sqlite3": "^5.1.7",
     "unzipit": "^1.4.3"
   },

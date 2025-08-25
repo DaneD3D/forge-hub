@@ -1,6 +1,7 @@
 import { Show } from 'solid-js';
 import { useAuth } from '../hooks/AuthContext';
 import { getProfile, GetProfileParams } from 'bungie-api-ts/destiny2';
+import { initDatabase } from '../hooks/ManifestDatabase';
 
 function ApiTest() {
   const auth = useAuth();
@@ -45,6 +46,7 @@ function ApiTest() {
         </Show>
 
         <button
+          class="ml-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           type="button"
           onClick={async () => {
             if (membershipId && membershipType) {
@@ -63,6 +65,20 @@ function ApiTest() {
           }}
         >
           Test Destiny2 getProfile API Call
+        </button>
+        <button
+          class="ml-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          type="button"
+          onClick={async () => {
+            try {
+              await initDatabase(auth.httpClient());
+              console.log('Database initialized with manifest data');
+            } catch (err) {
+              console.error('Error initializing database:', err);
+            }
+          }}
+        >
+          Initialize Database with Manifest Data
         </button>
       </div>
     </div>
